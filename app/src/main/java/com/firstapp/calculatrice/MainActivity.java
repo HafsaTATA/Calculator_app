@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Object> operation = new ArrayList<Object>();
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 operation.addAll(display);
                 operation.add('+');
-                Display(operation);
+                DisplayOperation(operation);
                 display.clear();
                 Display(display);
             }
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 operation.addAll(display);
                 operation.add('-');
-                Display(operation);
+                DisplayOperation(operation);
                 display.clear();
                 Display(display);
             }
@@ -181,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 operation.addAll(display);
                 operation.add('*');
-                Display(operation);
+                DisplayOperation(operation);
                 display.clear();
                 Display(display);
             }
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 operation.addAll(display);
                 operation.add('/');
-                Display(operation);
+                DisplayOperation(operation);
                 display.clear();
                 Display(display);
             }
@@ -201,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 operation.addAll(display);
                 operation.add('%');
-                Display(operation);
+                DisplayOperation(operation);
                 display.clear();
                 Display(display);
             }
@@ -243,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     sb.append(element);
                 double value = Double.parseDouble(sb.toString());
                 value=Math.sqrt(value);
+                display.clear();
                 display.add(value);
                 Display(display);
             }
@@ -267,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(display.size()>0)
                 display.remove(display.size() - 1);
                 Display(display);
             }
@@ -352,42 +355,70 @@ public class MainActivity extends AppCompatActivity {
             throw new IllegalArgumentException("The input list is empty or null.");
         }
 
-        double result = 0.0;
-        String operator = null;
+        Stack<Double> numberStack = new Stack<>();
+        Stack<String> operatorStack = new Stack<>();
 
         for (Object item : list) {
             if (item instanceof Double) {
-                double number = (Double) item;
-                if (operator == null) {
-                    result = number;
-                } else {
-                    switch (operator) {
-                        case "+":
-                            result += number;
-                            break;
-                        case "-":
-                            result -= number;
-                            break;
-                        case "*":
-                            result *= number;
-                            break;
-                        case "/":
-                            if (number == 0.0) {
-                                throw new ArithmeticException("Division by zero is not allowed.");
-                            }
-                            result /= number;
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Unsupported operator: " + operator);
-                    }
-                }
+                numberStack.push((Double) item);
             } else if (item instanceof String) {
-                operator = (String) item;
+                String operator = (String) item;
+                while (!operatorStack.isEmpty() && hasPrecedence(operator, operatorStack.peek())) {
+                    double operand2 = numberStack.pop();
+                    double operand1 = numberStack.pop();
+                    String op = operatorStack.pop();
+                    double result = performOperation(operand1, operand2, op);
+                    numberStack.push(result);
+                }
+                operatorStack.push(operator);
             } else {
                 throw new IllegalArgumentException("Unsupported element in the list: " + item);
             }
         }
 
+        while (!operatorStack.isEmpty()) {
+            double operand2 = numberStack.pop();
+            double operand1 = numberStack.pop();
+            String operator = operatorStack.pop();
+            double result = performOperation(operand1, operand2, operator);
+            numberStack.push(result);
+        }
+
+        if (numberStack.size() != 1 || !operatorStack.isEmpty()) {
+            throw new IllegalArgumentException("Invalid expression.");
+        }
+
+        return numberStack.pop();
+    }
+
+    private boolean hasPrecedence(String op1, String op2) {
+        return (op1.equals("*") || op1.equals("/") || op1.equals("%")) && (op2.equals("+") || op2.equals("-"));
+    }
+
+    private double performOperation(double operand1, double operand2, String operator) {
+        double result;
+        switch (operator) {
+            case "+":
+                result = operand1 + operand2;
+                break;
+            case "-":
+                result = operand1 - operand2;
+                break;
+            case "*":
+                result = operand1 * operand2;
+                break;
+            case "/":
+                if (operand2 == 0.0) {
+                    throw new ArithmeticException("Division by zero is not allowed.");
+                }
+                result = operand1 / operand2;
+                break;
+            case "%":
+                result = operand1 % operand2;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported operator: " + operator);
+        }
         return result;
     }
 
