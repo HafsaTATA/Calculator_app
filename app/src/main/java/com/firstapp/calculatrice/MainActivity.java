@@ -3,8 +3,6 @@ package com.firstapp.calculatrice;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -12,11 +10,9 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<Object> operation = new ArrayList<Object>();
-    ArrayList<Object> display=new ArrayList<Object>();
-    double var1,var2;
-    char operator;
-    boolean negative=false;
+    ArrayList<Object> operation = new ArrayList<>();
+    ArrayList<Object> display= new ArrayList<>();
+
     Button zero,one,two,three,four,five,six,seven,eight,nine;
     TextView operationHistory,result;
     Button equal,divide,add,sub,modulo,multiply,divX,pow,square,clear,clearElement,delete;
@@ -56,237 +52,169 @@ public class MainActivity extends AppCompatActivity {
         addSub=findViewById(R.id.addSub);
         comma=findViewById(R.id.comma);
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!display.isEmpty()) {
-                    display.remove(display.size() - 1);
-                    Display(display);
-                }
-            }
-        });
-
-        addSub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                negative=true;
-            }
-        });
-
-        zero.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(0);
-                Display(display);
-            }
-        });
-
-        one.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(1);
-                Display(display);
-            }
-        });
-
-        two.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(2);
-                Display(display);
-            }
-        });
-
-        three.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(3);
-                Display(display);
-            }
-        });
-
-        four.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(4);
-                Display(display);
-            }
-        });
-        five.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(5);
-                Display(display);
-            }
-        });
-        six.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(6);
-                Display(display);
-            }
-        });
-        seven.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(7);
-                Display(display);
-            }
-        });
-        eight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(8);
-                Display(display);
-            }
-        });
-        nine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add(9);
-                Display(display);
-            }
-        });
-
-        comma.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.add('.');
-                Display(display);
-            }
-        });
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operation.addAll(display);
-                operation.add('+');
-                DisplayOperation(operation);
-                display.clear();
-                Display(display);
-            }
-        });
-
-        sub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operation.addAll(display);
-                operation.add('-');
-                DisplayOperation(operation);
-                display.clear();
-                Display(display);
-            }
-        });
-        multiply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operation.addAll(display);
-                operation.add('*');
-                DisplayOperation(operation);
-                display.clear();
-                Display(display);
-            }
-        });
-        divide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operation.addAll(display);
-                operation.add('/');
-                DisplayOperation(operation);
-                display.clear();
-                Display(display);
-            }
-        });
-        modulo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operation.addAll(display);
-                operation.add('%');
-                DisplayOperation(operation);
-                display.clear();
-                Display(display);
-            }
-        });
-        pow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StringBuilder sb = new StringBuilder();
-                for (Object element : display)
-                    sb.append(element);
-                double value = Double.parseDouble(sb.toString());
-                value*=value;
-                display.clear();
-                display.add(value);
-                Display(display);
-
-            }
-        });
-
-        divX.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StringBuilder sb = new StringBuilder();
-                for (Object element : display)
-                    sb.append(element);
-                double value = Double.parseDouble(sb.toString());
-                value=1/value;
-                display.clear();
-                display.add(value);
-                Display(display);
-            }
-        });
-
-        square.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StringBuilder sb = new StringBuilder();
-                for (Object element : display)
-                    sb.append(element);
-                double value = Double.parseDouble(sb.toString());
-                value=Math.sqrt(value);
-                display.clear();
-                display.add(value);
-                Display(display);
-            }
-        });
-        clearElement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                display.clear();
-                Display(display);
-            }
-        });
-
-        clear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operation.clear();
-                display.clear();
-                DisplayOperation(operation);
-                Display(display);
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(display.size()>0)
+        delete.setOnClickListener(view -> {
+            if (!display.isEmpty()) {
                 display.remove(display.size() - 1);
                 Display(display);
             }
         });
 
-        equal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                operation.addAll(display);
-                Display(operation);
-                display.clear();
-                operation=OperationBuilder(operation);
-                double value=executeOperation(operation);
-                display.add(value);
-                Display(display);
+        addSub.setOnClickListener(view -> {
+            StringBuilder sb = new StringBuilder();
+            for (Object element : display)
+                sb.append(element);
+            double value = Double.parseDouble(sb.toString());
+            value*=-1;
+            display.clear();
+            display.add(value);
+            Display(display);
+        });
 
-            }
+        zero.setOnClickListener(view -> {
+            display.add(0);
+            Display(display);
+        });
+
+        one.setOnClickListener(view -> {
+            display.add(1);
+            Display(display);
+        });
+
+        two.setOnClickListener(view -> {
+            display.add(2);
+            Display(display);
+        });
+
+        three.setOnClickListener(view ->{
+                display.add(3);
+                Display(display);
+        });
+
+        four.setOnClickListener(view -> {
+            display.add(4);
+            Display(display);
+        });
+        five.setOnClickListener(view -> {
+            display.add(5);
+            Display(display);
+        });
+        six.setOnClickListener(view -> {
+            display.add(6);
+            Display(display);
+        });
+        seven.setOnClickListener(view -> {
+            display.add(7);
+            Display(display);
+        });
+        eight.setOnClickListener(view -> {
+            display.add(8);
+            Display(display);
+        });
+        nine.setOnClickListener(view -> {
+            display.add(9);
+            Display(display);
+        });
+
+        comma.setOnClickListener(view -> {
+            display.add('.');
+            Display(display);
+        });
+
+        add.setOnClickListener(view -> {
+            operation.addAll(display);
+            operation.add('+');
+            DisplayOperation(operation);
+            display.clear();
+            Display(display);
+        });
+
+        sub.setOnClickListener(view -> {
+            operation.addAll(display);
+            operation.add('-');
+            DisplayOperation(operation);
+            display.clear();
+            Display(display);
+        });
+        multiply.setOnClickListener(view -> {
+            operation.addAll(display);
+            operation.add('*');
+            DisplayOperation(operation);
+            display.clear();
+            Display(display);
+        });
+        divide.setOnClickListener(view -> {
+            operation.addAll(display);
+            operation.add('/');
+            DisplayOperation(operation);
+            display.clear();
+            Display(display);
+        });
+        modulo.setOnClickListener(view -> {
+            operation.addAll(display);
+            operation.add('%');
+            DisplayOperation(operation);
+            display.clear();
+            Display(display);
+        });
+        pow.setOnClickListener(view -> {
+            StringBuilder sb = new StringBuilder();
+            for (Object element : display)
+                sb.append(element);
+            double value = Double.parseDouble(sb.toString());
+            value*=value;
+            display.clear();
+            display.add(value);
+            Display(display);
+
+        });
+
+        divX.setOnClickListener(view -> {
+            StringBuilder sb = new StringBuilder();
+            for (Object element : display)
+                sb.append(element);
+            double value = Double.parseDouble(sb.toString());
+            value=1/value;
+            display.clear();
+            display.add(value);
+            Display(display);
+        });
+
+        square.setOnClickListener(view -> {
+            StringBuilder sb = new StringBuilder();
+            for (Object element : display)
+                sb.append(element);
+            double value = Double.parseDouble(sb.toString());
+            value=Math.sqrt(value);
+            display.clear();
+            display.add(value);
+            Display(display);
+        });
+        clearElement.setOnClickListener(view -> {
+            display.clear();
+            Display(display);
+        });
+
+        clear.setOnClickListener(view -> {
+            operation.clear();
+            display.clear();
+            DisplayOperation(operation);
+            Display(display);
+        });
+        delete.setOnClickListener(view -> {
+            if(display.size()>0)
+                display.remove(display.size() - 1);
+            Display(display);
+        });
+
+        equal.setOnClickListener(view -> {
+            operation.addAll(display);
+            DisplayOperation(operation);
+            display.clear();
+            operation=OperationBuilder(operation);
+            double value=evaluateExpression(operation);
+            display.add(value);
+            Display(display);
+
         });
 
     }
@@ -341,86 +269,73 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isOperator(Object item) {
-        // Check if the item is an operator (you may need to modify this based on your use case)
-        if (item instanceof String) {
-            String str = (String) item;
-            return str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/") || str.equals("divX") || str.equals("pow") || str.equals("sqr");
-        }
-        return false;
-    }
+    public static double evaluateExpression(ArrayList<Object> expression) {
+        Stack<Double> numbers = new Stack<>();
+        Stack<Character> operators = new Stack<>();
 
-    public double executeOperation(ArrayList<Object> list) {
-        if (list == null || list.isEmpty()) {
-            throw new IllegalArgumentException("The input list is empty or null.");
-        }
+        for (Object element : expression) {
+            if (element instanceof Double) {
+                numbers.push((Double) element);
+            } else if (element instanceof Character) {
+                char operator = (Character) element;
 
-        Stack<Double> numberStack = new Stack<>();
-        Stack<String> operatorStack = new Stack<>();
+                while (!operators.isEmpty() && hasPrecedence(operators.peek(), operator)) {
+                    double b = numbers.pop();
+                    double a = numbers.pop();
+                    char op = operators.pop();
 
-        for (Object item : list) {
-            if (item instanceof Double) {
-                numberStack.push((Double) item);
-            } else if (item instanceof String) {
-                String operator = (String) item;
-                while (!operatorStack.isEmpty() && hasPrecedence(operator, operatorStack.peek())) {
-                    double operand2 = numberStack.pop();
-                    double operand1 = numberStack.pop();
-                    String op = operatorStack.pop();
-                    double result = performOperation(operand1, operand2, op);
-                    numberStack.push(result);
+                    double result = applyOperator(a, b, op);
+                    numbers.push(result);
                 }
-                operatorStack.push(operator);
-            } else {
-                throw new IllegalArgumentException("Unsupported element in the list: " + item);
+
+                operators.push(operator);
             }
         }
 
-        while (!operatorStack.isEmpty()) {
-            double operand2 = numberStack.pop();
-            double operand1 = numberStack.pop();
-            String operator = operatorStack.pop();
-            double result = performOperation(operand1, operand2, operator);
-            numberStack.push(result);
+        while (!operators.isEmpty()) {
+            double b = numbers.pop();
+            double a = numbers.pop();
+            char op = operators.pop();
+
+            double result = applyOperator(a, b, op);
+            numbers.push(result);
         }
 
-        if (numberStack.size() != 1 || !operatorStack.isEmpty()) {
-            throw new IllegalArgumentException("Invalid expression.");
+        if (numbers.size() == 1 && operators.isEmpty()) {
+            return numbers.pop();
+        } else {
+            throw new IllegalArgumentException("Invalid expression");
         }
-
-        return numberStack.pop();
     }
 
-    private boolean hasPrecedence(String op1, String op2) {
-        return (op1.equals("*") || op1.equals("/") || op1.equals("%")) && (op2.equals("+") || op2.equals("-"));
+    private static boolean hasPrecedence(char op1, char op2) {
+        return (op1 != '+' && op1 != '-') || (op2 != '*' && op2 != '/' && op2 != '%');
     }
 
-    private double performOperation(double operand1, double operand2, String operator) {
-        double result;
+    private static double applyOperator(double a, double b, char operator) {
         switch (operator) {
-            case "+":
-                result = operand1 + operand2;
-                break;
-            case "-":
-                result = operand1 - operand2;
-                break;
-            case "*":
-                result = operand1 * operand2;
-                break;
-            case "/":
-                if (operand2 == 0.0) {
-                    throw new ArithmeticException("Division by zero is not allowed.");
+            case '+':
+                return a + b;
+            case '-':
+                return a - b;
+            case '*':
+                return a * b;
+            case '/':
+                if (b == 0) {
+                    throw new ArithmeticException("Division by zero");
                 }
-                result = operand1 / operand2;
-                break;
-            case "%":
-                result = operand1 % operand2;
-                break;
+                return a / b;
+
+            case '%':
+                if (b == 0) {
+                    throw new ArithmeticException("Modulo by zero");
+                }
+                return a % b;
             default:
-                throw new IllegalArgumentException("Unsupported operator: " + operator);
+                throw new IllegalArgumentException("Invalid operator");
         }
-        return result;
     }
+
 
 
 }
